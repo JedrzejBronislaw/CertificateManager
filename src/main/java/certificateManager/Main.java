@@ -1,5 +1,6 @@
 package certificateManager;
 
+import certificateManager.ctrls.DownloadPaneController;
 import certificateManager.ctrls.MainWindowController;
 import certificateManager.tools.MyFXMLLoader;
 import certificateManager.tools.MyFXMLLoader.NodeAndController;
@@ -17,8 +18,13 @@ public class Main extends Application{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		MyFXMLLoader<MainWindowController> loader = new MyFXMLLoader<MainWindowController>();
+		MyFXMLLoader<MainWindowController> loader = new MyFXMLLoader<>();
 		NodeAndController<MainWindowController> nac = loader.create("MainWindow.fxml");
+		
+		MyFXMLLoader<DownloadPaneController> downloadLoader = new MyFXMLLoader<>();
+		NodeAndController<DownloadPaneController> downloadNAC = downloadLoader.create("DownloadPane.fxml");
+		
+		nac.getController().setContent((Pane)downloadNAC.getNode());
 		
 		primaryStage.setScene(new Scene((Pane)nac.getNode()));
 		
