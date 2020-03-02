@@ -26,6 +26,12 @@ public class Main extends Application{
 		
 		nac.getController().setContent((Pane)downloadNAC.getNode());
 		
+		downloadNAC.getController().setDownladButtonAction(url -> {
+			CertificateDownloader downloader = new CertificateDownloader(url);
+			
+			downloader.parse();
+		});
+		
 		primaryStage.setScene(new Scene((Pane)nac.getNode()));
 		
 		primaryStage.setTitle("Certificate Manager");
