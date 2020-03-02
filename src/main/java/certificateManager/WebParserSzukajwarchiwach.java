@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CertificateDownloader {
+public class WebParserSzukajwarchiwach implements WebParser{
 
 	private final static String domain = "https://szukajwarchiwach.pl/";
 	
@@ -26,6 +26,7 @@ public class CertificateDownloader {
 		return url.startsWith(domain);
 	}
 	
+	@Override
 	public void parse() {
 		if (!validateUrl()) return;
 		
@@ -48,7 +49,4 @@ public class CertificateDownloader {
 		System.out.println("Description: " + description);
 	}
 	
-	private void download() {
-		
-	}
 }
