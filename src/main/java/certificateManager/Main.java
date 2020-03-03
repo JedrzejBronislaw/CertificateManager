@@ -28,8 +28,12 @@ public class Main extends Application{
 		
 		downloadNAC.getController().setDownladButtonAction(url -> {
 			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+			CertificateDownloader downloader;
 			
 			parser.parse();
+			downloader = new CertificateDownloader(parser.getCertificateURL());
+			
+			downloader.download();
 		});
 		
 		primaryStage.setScene(new Scene((Pane)nac.getNode()));
