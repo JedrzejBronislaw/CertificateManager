@@ -27,6 +27,7 @@ public class Main extends Application{
 		nac.getController().setContent((Pane)downloadNAC.getNode());
 		
 		downloadNAC.getController().setDownladButtonAction(url -> {
+			downloadNAC.getController().blockControls();
 			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
 			CertificateDownloader downloader;
 			SourceWriter sourceWriter = new SourceWriter("D://certificate//source.txt", parser);
@@ -36,7 +37,7 @@ public class Main extends Application{
 			sourceWriter.setUrl(url);
 //			sourceWriter.setCertificateName(certificateName);
 			
-			downloader.download();
+			downloader.download(b -> downloadNAC.getController().unblockControls());
 			sourceWriter.write();
 		});
 		
