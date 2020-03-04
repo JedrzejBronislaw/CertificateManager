@@ -36,6 +36,8 @@ public class Main extends Application{
 			downloader.download();
 		});
 		
+		downloadNAC.getController().setUrlValidator(url -> url.startsWith("https://szukajwarchiwach.pl/"));
+		
 		primaryStage.setScene(new Scene((Pane)nac.getNode()));
 		
 		primaryStage.setTitle("Certificate Manager");
