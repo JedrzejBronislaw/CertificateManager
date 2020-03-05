@@ -10,6 +10,7 @@ public class CertificateRecord {
 	
 	private enum RecordType{START_DATE, END_DATE, OTHER};
 	private enum Tip{START, END};
+	enum PersonType{SINGLE, MARRIAGE, OTHER};
 	
 	public static final String conjunction = "i";
 
@@ -31,6 +32,8 @@ public class CertificateRecord {
 	}
 
 	private RecordType recordType = RecordType.OTHER;
+	@Getter
+	private PersonType personType = PersonType.OTHER;
 
 	private void parse() {
 
@@ -88,6 +91,7 @@ public class CertificateRecord {
 
 	private void buildSinglePerson(final List<String> words, final int name,  final int surname) {
 		person = (words.get(name) + " " + words.get(surname)).trim();
+		personType = PersonType.SINGLE;
 	}
 
 	private void buildMarriagePerson(final List<String> words, final int bridegroomName,  final int bridegroomSurname,  final int brideName,  final int brideSurname) {
@@ -101,6 +105,7 @@ public class CertificateRecord {
 		sb.append(bride.trim());
 
 		person = sb.toString();
+		personType = PersonType.MARRIAGE;
 	}
 
 	private void searchNumbers() {

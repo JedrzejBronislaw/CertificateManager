@@ -200,5 +200,15 @@ class CertificateRecordTest {
 		assertEquals(17, record.getOrdinal());
 		assertEquals("Wladyslaw Kowalski " + CertificateRecord.conjunction + " Rozalia", record.getPerson());
 	}
+	
+//------
+	
+	@Test
+	void testParse_empty() {
+		record = new CertificateRecord("");
+		assertEquals(null, record.getYear());
+		assertEquals(null, record.getOrdinal());
+		assertEquals("", record.getPerson());
+	}
 
 }
