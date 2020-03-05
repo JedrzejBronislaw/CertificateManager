@@ -5,11 +5,16 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import certificateManager.CertificateNamer;
+import certificateManager.CertificateNamer.CertificateType;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -19,6 +24,25 @@ import lombok.Setter;
 
 public class DownloadPaneController implements Initializable {
 
+	
+	//naming
+	@FXML
+	private RadioButton cType_birth;
+	@FXML
+	private RadioButton cType_marriage;
+	@FXML
+	private RadioButton cType_death;
+	@FXML
+	private RadioButton cType_other;
+
+	@FXML
+	private TextArea recordField;
+	@FXML
+	private TextField nameField;
+	
+	private CertificateNamer namer = new CertificateNamer();
+	//naming END
+	
 	@FXML
 	private TextField urlField;
 
@@ -87,5 +111,37 @@ public class DownloadPaneController implements Initializable {
 		});
 
 		refreshControls();
+		
+
+		//naming
+		namer.setCertificateTypeNames("birth", "marriage", "death");
+		recordField.textProperty().addListener((obrv, oldV, newV) -> refreshCertificateName());
+		
+		ChangeListener<? super Boolean> typeRefersher = (obrv, oldV, newV) -> refreshCertificateType();
+		cType_birth.selectedProperty().addListener(typeRefersher);
+		cType_marriage.selectedProperty().addListener(typeRefersher);
+		cType_death.selectedProperty().addListener(typeRefersher);
+		cType_other.selectedProperty().addListener(typeRefersher);
+		//naming END
 	}
+
+	//naming
+	private void refreshCertificateType() {
+		if(cType_birth.isSelected())
+			namer.setType(CertificateType.Birth);
+		if(cType_marriage.isSelected())
+			namer.setType(CertificateType.Marriage);
+		if(cType_death.isSelected())
+			namer.setType(CertificateType.Death);
+		if(cType_other.isSelected())
+			namer.setType(CertificateType.Other);
+
+		nameField.setText(namer.generateName());
+	}
+	
+	private void refreshCertificateName() {
+		namer.setRecord(recordField.getText());
+		nameField.setText(namer.generateName());
+	}
+	//naming END
 }
