@@ -2,6 +2,8 @@ package certificateManager;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,6 +18,8 @@ public class SourceWriter {
 	@Setter
 	private String url;
 	
+	private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	
 	public boolean write() {
 		
 		try(FileWriter writer = new FileWriter(fileName, true)){
@@ -25,6 +29,8 @@ public class SourceWriter {
 				writer.write(certificateName);
 			else
 				writer.write("[no name]");
+			writer.write("\n");
+			writer.write("\tdownload time: "+LocalDateTime.now().format(dateTimeFormatter));
 			writer.write("\n");
 			writer.write("\t"+webParser.getDescription());
 			writer.write("\n");
