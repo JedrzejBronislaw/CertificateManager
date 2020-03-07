@@ -58,6 +58,13 @@ public class DownloadPaneController implements Initializable {
 	private boolean correctURL = true;
 	private boolean controlsBlock = false;
 
+
+	//naming
+	public String getCertificateName() {
+		return nameField.getText().trim();
+	}
+	//naming END
+	
 	private void setUrlFieldColor(String color) {
 		CornerRadii radii = new CornerRadii(3);
 		Insets insets = new Insets(1);
@@ -92,6 +99,16 @@ public class DownloadPaneController implements Initializable {
 		Platform.runLater(() -> {
 			urlField.setDisable(controlsBlock);
 			downloadButton.setDisable(blankURL || !correctURL || controlsBlock);
+			
+			//naming
+			cType_birth.setDisable(controlsBlock);
+			cType_marriage.setDisable(controlsBlock);
+			cType_death.setDisable(controlsBlock);
+			cType_other.setDisable(controlsBlock);
+
+			recordField.setDisable(controlsBlock);
+			nameField.setDisable(controlsBlock);
+			//naming END
 		});
 	}
 

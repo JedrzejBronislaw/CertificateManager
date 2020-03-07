@@ -20,21 +20,24 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 public class CertificateDownloader {
 
 	private static final String DIR = "D://certificate//";
+	private static final String EXTENSION = "jpg";
 
 	private final String url;
-
+	@Setter
+	private String fileName;
 
 	public void download() {
 		download(null);
 	}
-	
+
 	public void download(Consumer<Boolean> after) {
-		new Thread(() -> downloadProcess(after)).start();;
+		new Thread(() -> downloadProcess(after)).start();
 	}
 
 	private void downloadProcess(Consumer<Boolean> after) {
@@ -65,9 +68,9 @@ public class CertificateDownloader {
 
 	private boolean downloadFile(String URL) {
 		boolean success = true;
-		
+
 		try (BufferedInputStream in = new BufferedInputStream(new URL(URL).openStream());
-				FileOutputStream fileOutputStream = new FileOutputStream(DIR + generateFileName())) {
+				FileOutputStream fileOutputStream = new FileOutputStream(DIR + generateFileName() + "." + EXTENSION)) {
 
 			byte dataBuffer[] = new byte[1024];
 			int bytesRead;
@@ -77,14 +80,39 @@ public class CertificateDownloader {
 		} catch (IOException e) {
 			e.printStackTrace();
 			success = false;
-		}		
-		
+		}
+
 		return success;
 	}
-	
+
 	private String generateFileName() {
+		String baseName, finalName;
+
+		baseName = (fileName != null || fileName.isEmpty()) ? fileName : generateTimeFileName();
+		finalName = changeNameIfFileExist(baseName);
+
+		return finalName;
+	}
+
+	private String changeNameIfFileExist(final String baseName) {
+		File f;
+		String finalName;
+		int i = 2;
+		
+		finalName = baseName;
+
+		f = new File(DIR + finalName + "." + EXTENSION);
+		while (f.exists()) {
+			finalName = baseName + " (" + (i++) + ")";
+			f = new File(DIR + finalName + "." + EXTENSION);
+		}
+		
+		return finalName;
+	}
+
+	private String generateTimeFileName() {
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-		return "certificate_" + LocalDateTime.now().format(formatter).replace(":", "_") + ".jpg";
+		return "certificate_" + LocalDateTime.now().format(formatter).replace(":", "_");
 	}
 
 	private void turnOffCertificateValidation() throws KeyManagementException, NoSuchAlgorithmException {
