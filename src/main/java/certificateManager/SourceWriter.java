@@ -32,6 +32,8 @@ public class SourceWriter {
 			writer.write("\n");
 			writer.write("\tdownload time: "+LocalDateTime.now().format(dateTimeFormatter));
 			writer.write("\n");
+			writer.write("\t"+webParser.getCollection());
+			writer.write("\n");
 			writer.write("\t"+webParser.getDescription());
 			writer.write("\n");
 			writer.write("\t"+url);
