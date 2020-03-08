@@ -29,18 +29,19 @@ public class Main extends Application{
 		downloadNAC.getController().setDownladButtonAction(url -> {
 			downloadNAC.getController().blockControls();
 
-			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
 			CertificateDownloader downloader;
-			SourceWriter sourceWriter = new SourceWriter("D://certificate//source.txt", parser);
+			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+			String destitationDir = downloadNAC.getController().getDestitationDir();
+			SourceWriter sourceWriter = new SourceWriter(destitationDir + "source.txt", parser);
 			String certificateName = downloadNAC.getController().getCertificateName();
 			
 			parser.parse();
-			downloader = new CertificateDownloader(parser.getCertificateURL());
-			sourceWriter.setUrl(url);
-			sourceWriter.setCertificateName(certificateName);
-			
+			downloader = new CertificateDownloader(destitationDir,parser.getCertificateURL());
 			downloader.setFileName(certificateName);
 			downloader.download(b -> downloadNAC.getController().unblockControls());
+
+			sourceWriter.setUrl(url);
+			sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
 			
 			sourceWriter.write();
 		});

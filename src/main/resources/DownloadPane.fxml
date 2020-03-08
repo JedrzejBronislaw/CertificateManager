@@ -27,17 +27,17 @@
             <TextField fx:id="urlField" />
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox spacing="5.0">
          <children>
             <Label text="Certificate name:" />
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label prefWidth="70.0" text="Record:">
+                  <Label minWidth="-Infinity" prefWidth="70.0" text="Record:">
                      <padding>
                         <Insets left="10.0" />
                      </padding>
                   </Label>
-                  <TextArea fx:id="recordField" maxHeight="-Infinity" prefHeight="25.0" prefRowCount="1" />
+                  <TextArea fx:id="recordField" maxHeight="-Infinity" prefHeight="25.0" prefWidth="464.0" />
                </children>
             </HBox>
             <VBox alignment="TOP_CENTER" fillWidth="false">
@@ -68,6 +68,17 @@
                      </padding>
                   </Label>
                   <TextField fx:id="nameField" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox spacing="5.0">
+         <children>
+            <Label text="Directory:" />
+            <TextField fx:id="dirField" editable="false" text="D:\certificate\" />
+            <HBox alignment="TOP_RIGHT">
+               <children>
+                  <Button fx:id="selectDirButton" alignment="TOP_LEFT" mnemonicParsing="false" text="Select" />
                </children>
             </HBox>
          </children>

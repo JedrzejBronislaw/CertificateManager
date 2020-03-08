@@ -19,25 +19,38 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @RequiredArgsConstructor
 public class CertificateDownloader {
 
-	private static final String DIR = "D://certificate//";
+	@NonNull
+	private String DIR;// = "D://certificate//";
 	private static final String EXTENSION = "jpg";
 
 	private final String url;
 	@Setter
 	private String fileName;
+	private String downloadFileName = "";
 
+	public String getLastDownloadFileName() {
+		return downloadFileName;
+	}
+	
 	public void download() {
 		download(null);
 	}
 
 	public void download(Consumer<Boolean> after) {
+		setDownloadFileName();
 		new Thread(() -> downloadProcess(after)).start();
+	}
+
+	private void setDownloadFileName() {
+		downloadFileName = generateFileName() + "." + EXTENSION;
 	}
 
 	private void downloadProcess(Consumer<Boolean> after) {
@@ -70,7 +83,7 @@ public class CertificateDownloader {
 		boolean success = true;
 
 		try (BufferedInputStream in = new BufferedInputStream(new URL(URL).openStream());
-				FileOutputStream fileOutputStream = new FileOutputStream(DIR + generateFileName() + "." + EXTENSION)) {
+				FileOutputStream fileOutputStream = new FileOutputStream(DIR + downloadFileName)) {
 
 			byte dataBuffer[] = new byte[1024];
 			int bytesRead;

@@ -1,5 +1,6 @@
 package certificateManager.ctrls;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -20,6 +21,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Paint;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import lombok.Setter;
 
 public class DownloadPaneController implements Initializable {
@@ -43,6 +46,13 @@ public class DownloadPaneController implements Initializable {
 	private CertificateNamer namer = new CertificateNamer();
 	//naming END
 	
+	//dir
+	@FXML
+	private TextField dirField;
+	@FXML
+	private Button selectDirButton;
+	//dir END
+	
 	@FXML
 	private TextField urlField;
 
@@ -64,6 +74,12 @@ public class DownloadPaneController implements Initializable {
 		return nameField.getText().trim();
 	}
 	//naming END
+	
+	//dir
+	public String getDestitationDir() {
+		return dirField.getText();
+	}
+	//dir END
 	
 	private void setUrlFieldColor(String color) {
 		CornerRadii radii = new CornerRadii(3);
@@ -109,6 +125,11 @@ public class DownloadPaneController implements Initializable {
 			recordField.setDisable(controlsBlock);
 			nameField.setDisable(controlsBlock);
 			//naming END
+			
+			//dir
+			dirField.setDisable(controlsBlock);
+			selectDirButton.setDisable(controlsBlock);
+			//dir END
 		});
 	}
 
@@ -140,6 +161,20 @@ public class DownloadPaneController implements Initializable {
 		cType_death.selectedProperty().addListener(typeRefersher);
 		cType_other.selectedProperty().addListener(typeRefersher);
 		//naming END
+		
+		//dir
+		selectDirButton.setOnAction(e -> {
+			DirectoryChooser chooser = new DirectoryChooser();
+			File dir;
+			
+			chooser.setTitle("Select directory...");
+			dir = chooser.showDialog(null);
+			
+			if(dir != null && dir.exists() && dir.isDirectory())
+				dirField.setText(dir.getAbsolutePath() + File.separator);
+			
+		});
+		//dir END
 	}
 
 	//naming
