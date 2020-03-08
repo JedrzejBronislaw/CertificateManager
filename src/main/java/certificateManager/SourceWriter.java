@@ -1,5 +1,6 @@
 package certificateManager;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -21,10 +22,13 @@ public class SourceWriter {
 	private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	
 	public boolean write() {
+		boolean newFile = !new File(fileName).exists();
 		
 		try(FileWriter writer = new FileWriter(fileName, true)){
 
-			writer.write("\n\n");
+			if(!newFile)
+				writer.write("\n\n");
+			
 			if (certificateName != null)
 				writer.write(certificateName);
 			else
