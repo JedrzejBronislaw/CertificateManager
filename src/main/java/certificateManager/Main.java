@@ -1,5 +1,7 @@
 package certificateManager;
 
+import java.util.List;
+
 import certificateManager.ctrls.DownloadPaneController;
 import certificateManager.ctrls.MainWindowController;
 import certificateManager.tools.MyFXMLLoader;
@@ -44,6 +46,15 @@ public class Main extends Application{
 			sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
 			
 			sourceWriter.write();
+		});
+
+		downloadNAC.getController().setDownladUnitButtonAction(url -> {
+//			CertificateDownloader downloader;
+			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+			List<String> certificates = parser.getAllScansInCatallog();
+			
+			System.out.println("Certificates: " + certificates.size());
+			certificates.forEach(c -> System.out.println(":: " + c));
 		});
 		
 		downloadNAC.getController().setUrlValidator(url -> url.startsWith("https://szukajwarchiwach.pl/"));

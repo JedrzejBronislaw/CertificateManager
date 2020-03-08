@@ -53,6 +53,11 @@ public class DownloadPaneController implements Initializable {
 	private Button selectDirButton;
 	//dir END
 	
+	//unit
+	@FXML
+	private Button downloadUnitButton;
+	//unit END
+	
 	@FXML
 	private TextField urlField;
 
@@ -62,6 +67,11 @@ public class DownloadPaneController implements Initializable {
 	@Setter
 	private Consumer<String> downladButtonAction;
 
+	//unit
+	@Setter
+	private Consumer<String> downladUnitButtonAction;	
+	//unit END
+	
 	@Setter
 	private Function<String, Boolean> urlValidator;
 
@@ -140,6 +150,13 @@ public class DownloadPaneController implements Initializable {
 			if (downladButtonAction != null)
 				downladButtonAction.accept(urlField.getText());
 		});
+		
+		//unit
+		downloadUnitButton.setOnAction(url -> {
+			if (downladUnitButtonAction != null)
+				downladUnitButtonAction.accept(urlField.getText());
+		});
+		//unit END
 
 		urlField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (urlValidator != null)
