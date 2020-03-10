@@ -49,12 +49,24 @@ public class Main extends Application{
 		});
 
 		downloadNAC.getController().setDownladUnitButtonAction(url -> {
-//			CertificateDownloader downloader;
 			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+			parser.parse();
 			List<String> certificates = parser.getAllScansInCatallog();
 			
 			System.out.println("Certificates: " + certificates.size());
 			certificates.forEach(c -> System.out.println(":: " + c));
+			
+			
+			//----
+			CertificateUnitDownloader downloader;
+			String destitationDir = downloadNAC.getController().getDestitationDir();
+			String referenceCode = parser.getReferenceCode().replace("/", "-").replace(".", "_");
+			
+			downloader = new CertificateUnitDownloader(destitationDir + referenceCode, certificates);
+//			downloader.setFileName(certificateName);
+			downloader.download(b -> downloadNAC.getController().unblockControls());
+			
+			
 		});
 		
 		downloadNAC.getController().setUrlValidator(url -> url.startsWith("https://szukajwarchiwach.pl/"));

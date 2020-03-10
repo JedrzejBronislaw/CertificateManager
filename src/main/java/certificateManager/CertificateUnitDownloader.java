@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -26,13 +27,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @RequiredArgsConstructor
-public class CertificateDownloader {
+public class CertificateUnitDownloader {
 
 	@NonNull
 	private String DIR;// = "D://certificate//";
 	private static final String EXTENSION = "jpg";
 
-	private final String url;
+	private final List<String> URLs;
 	@Setter
 	private String fileName;
 	private String downloadFileName = "";
@@ -45,29 +46,33 @@ public class CertificateDownloader {
 		download(null);
 	}
 
-	public void download(Consumer<Boolean> after) {
-		setDownloadFileName();
+	public void download(Consumer<List<Boolean>> after) {
+//		setDownloadFileName();
 		new Thread(() -> downloadProcess(after)).start();
 	}
 
-	private void setDownloadFileName() {
-		downloadFileName = generateFileName() + "." + EXTENSION;
-	}
+//	private void setDownloadFileName() {
+//		downloadFileName = generateFileName() + "." + EXTENSION;
+//	}
 
-	private void downloadProcess(Consumer<Boolean> after) {
-		boolean success = true;
+	private void downloadProcess(Consumer<List<Boolean>> after) {
+		List<Boolean> success = new ArrayList<>();
 
 		try {
 			turnOffCertificateValidation();
 		} catch (KeyManagementException | NoSuchAlgorithmException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			success = false;
+			success.add(false);
 		}
 
-		if (success) {
+		if (success.size() == 0) {
 			createDirIfNotExists();
-			success = downloadFile(url);
+			URLs.forEach(url -> {
+				
+				success.add(downloadFile(url.replace("full", "save")));
+			});
+//			success = downloadFile(url);
 
 		}
 
@@ -76,15 +81,20 @@ public class CertificateDownloader {
 	}
 
 	private void createDirIfNotExists() {
+		System.out.println(DIR);
 		File directory = new File(DIR);
 		directory.mkdirs();
 	}
 
+	int i = 1;
 	private boolean downloadFile(String URL) {
 		boolean success = true;
+		downloadFileName = (i++) + ".jpg";//TODO
+		System.out.println("Download: " + URL);
+		System.out.println("To: " + downloadFileName);
 
 		try (BufferedInputStream in = new BufferedInputStream(new URL(URL).openStream());
-				FileOutputStream fileOutputStream = new FileOutputStream(DIR + downloadFileName)) {
+				FileOutputStream fileOutputStream = new FileOutputStream(DIR + File.separator + downloadFileName)) {
 
 			byte dataBuffer[] = new byte[1024];
 			int bytesRead;
