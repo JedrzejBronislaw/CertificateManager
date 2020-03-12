@@ -81,7 +81,7 @@ public class CertificateRecord {
 
 	private void searchNames_startDate() {
 		if (words.length <= 4) {
-			List<String> augmentWords = augmentList(words, 3, Tip.END);
+			List<String> augmentWords = augmentList(words, 4, Tip.END);
 			buildSinglePerson(augmentWords, 2, 3);
 		} else {
 			List<String> augmentWords = augmentList(words, 7, Tip.END);
