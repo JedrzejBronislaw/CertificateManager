@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import certificateManager.CertificateNamer;
 import certificateManager.CertificateNamer.CertificateType;
+import certificateManager.lang.Internationalization;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -22,7 +23,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Paint;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import lombok.Setter;
 
 public class DownloadPaneController implements Initializable {
@@ -42,7 +42,7 @@ public class DownloadPaneController implements Initializable {
 	private TextArea recordField;
 	@FXML
 	private TextField nameField;
-	
+
 	private CertificateNamer namer = new CertificateNamer();
 	//naming END
 	
@@ -169,7 +169,12 @@ public class DownloadPaneController implements Initializable {
 		
 
 		//naming
-		namer.setCertificateTypeNames("birth", "marriage", "death");
+		namer.setCertificateTypeNames(
+				Internationalization.get("birth").toLowerCase(),
+				Internationalization.get("marriage").toLowerCase(),
+				Internationalization.get("death").toLowerCase());
+		
+		
 		recordField.textProperty().addListener((obrv, oldV, newV) -> refreshCertificateName());
 		
 		ChangeListener<? super Boolean> typeRefersher = (obrv, oldV, newV) -> refreshCertificateType();

@@ -23,16 +23,16 @@
       </Label>
       <VBox spacing="5.0">
          <children>
-            <Label text="Certificate URL:" />
+            <Label text="%certificate_url" />
             <TextField fx:id="urlField" />
          </children>
       </VBox>
       <VBox spacing="5.0">
          <children>
-            <Label text="Certificate name:" />
+            <Label text="%certificate_name" />
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label minWidth="-Infinity" prefWidth="70.0" text="Record:">
+                  <Label minWidth="-Infinity" prefWidth="70.0" text="%record">
                      <padding>
                         <Insets left="10.0" />
                      </padding>
@@ -42,17 +42,17 @@
             </HBox>
             <VBox alignment="TOP_CENTER" fillWidth="false">
                <children>
-                  <Label text="Certificate type:" />
+                  <Label text="%certificate_type" />
                   <VBox fillWidth="false">
                      <children>
-                        <RadioButton fx:id="cType_birth" mnemonicParsing="false" text="Birth">
+                        <RadioButton fx:id="cType_birth" mnemonicParsing="false" text="%birth">
                            <toggleGroup>
                               <ToggleGroup fx:id="certificateType" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="cType_marriage" mnemonicParsing="false" text="Marriage" toggleGroup="$certificateType" />
-                        <RadioButton fx:id="cType_death" mnemonicParsing="false" text="Death" toggleGroup="$certificateType" />
-                        <RadioButton fx:id="cType_other" mnemonicParsing="false" text="Other" toggleGroup="$certificateType" />
+                        <RadioButton fx:id="cType_marriage" mnemonicParsing="false" text="%marriage" toggleGroup="$certificateType" />
+                        <RadioButton fx:id="cType_death" mnemonicParsing="false" text="%death" toggleGroup="$certificateType" />
+                        <RadioButton fx:id="cType_other" mnemonicParsing="false" text="%other" toggleGroup="$certificateType" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -62,7 +62,7 @@
             </VBox>
             <HBox alignment="CENTER_LEFT" minWidth="-Infinity">
                <children>
-                  <Label prefWidth="70.0" text="Name:">
+                  <Label prefWidth="70.0" text="%name">
                      <padding>
                         <Insets left="10.0" />
                      </padding>
@@ -74,21 +74,21 @@
       </VBox>
       <VBox spacing="5.0">
          <children>
-            <Label text="Directory:" />
+            <Label text="%directory" />
             <TextField fx:id="dirField" editable="false" text="D:\certificate\" />
             <HBox alignment="TOP_RIGHT">
                <children>
-                  <Button fx:id="selectDirButton" alignment="TOP_LEFT" mnemonicParsing="false" text="Select" />
+                  <Button fx:id="selectDirButton" alignment="TOP_LEFT" mnemonicParsing="false" text="%select" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="downloadButton" mnemonicParsing="false" text="Download">
+      <Button fx:id="downloadButton" mnemonicParsing="false" text="%download">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="downloadUnitButton" mnemonicParsing="false" text="Download unit" />
+      <Button fx:id="downloadUnitButton" mnemonicParsing="false" text="%download_unit" />
    </children>
    <padding>
       <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />

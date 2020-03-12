@@ -1,6 +1,7 @@
 package certificateManager.tools;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,12 +26,14 @@ public class MyFXMLLoader<T extends Initializable>{
 
 
 	private static final String mainDir = "/";
+	private static final String lang = "lang.labels";
 	
 	
 	public NodeAndController<T> create(String fxmlFilePath) {
 		FXMLLoader fxmlLoader = new FXMLLoader();
 
 		fxmlLoader.setLocation(getClass().getResource(mainDir + fxmlFilePath));
+		fxmlLoader.setResources(ResourceBundle.getBundle(lang));
 
     	Node node;
 		try {
