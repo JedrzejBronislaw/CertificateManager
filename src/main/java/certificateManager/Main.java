@@ -4,6 +4,8 @@ import java.util.List;
 
 import certificateManager.ctrls.DownloadPaneController;
 import certificateManager.ctrls.MainWindowController;
+import certificateManager.lang.Internationalization;
+import certificateManager.lang.Languages;
 import certificateManager.tools.MyFXMLLoader;
 import certificateManager.tools.MyFXMLLoader.NodeAndController;
 import javafx.application.Application;
@@ -14,12 +16,38 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 
+	private Stage stage;
+	
 	public static void main(String[] args) {
 		Main.launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		this.stage = primaryStage;
+		buildView();
+	}
+
+	private void buildView() {
+		stage.setScene(buildScene());
+		
+		stage.setTitle("Certificate Manager");
+		stage.setOnCloseRequest(e -> Platform.exit());
+		
+		stage.show();
+	}
+	
+	private void changeLanguage(Languages language) {
+		if(Internationalization.getCurrentLanguage() != language)
+			stage.setScene(buildScene(language));
+	}
+	
+	private Scene buildScene(Languages language) {
+		Internationalization.setLanguage(language);
+		return buildScene();
+	}
+
+	private Scene buildScene() {
 		MyFXMLLoader<MainWindowController> loader = new MyFXMLLoader<>();
 		NodeAndController<MainWindowController> nac = loader.create("MainWindow.fxml");
 		
@@ -27,6 +55,8 @@ public class Main extends Application{
 		NodeAndController<DownloadPaneController> downloadNAC = downloadLoader.create("DownloadPane.fxml");
 		
 		nac.getController().setContent((Pane)downloadNAC.getNode());
+		
+		nac.getController().setChangeLanguage(this::changeLanguage);
 		
 		downloadNAC.getController().setDownladButtonAction(url -> {
 			downloadNAC.getController().blockControls();
@@ -70,13 +100,8 @@ public class Main extends Application{
 		});
 		
 		downloadNAC.getController().setUrlValidator(url -> url.startsWith("https://szukajwarchiwach.pl/"));
-		
-		primaryStage.setScene(new Scene((Pane)nac.getNode()));
-		
-		primaryStage.setTitle("Certificate Manager");
-		primaryStage.setOnCloseRequest(e -> Platform.exit());
-		
-		primaryStage.show();
+
+		return new Scene((Pane)nac.getNode());
 	}
 
 }
