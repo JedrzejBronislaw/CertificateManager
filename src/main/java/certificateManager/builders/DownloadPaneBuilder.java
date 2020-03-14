@@ -1,6 +1,7 @@
 package certificateManager.builders;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import certificateManager.CertificateDownloader;
 import certificateManager.CertificateUnitDownloader;
@@ -13,6 +14,8 @@ import javafx.scene.layout.Pane;
 
 public class DownloadPaneBuilder {
 
+	private static final String urlPrefix = "https://szukajwarchiwach.pl/";
+	private static final String DOWNLOAD_PANE_FXML = "DownloadPane.fxml";
 	private Pane pane;
 	
 
@@ -21,54 +24,63 @@ public class DownloadPaneBuilder {
 	}
 	
 	public DownloadPaneBuilder build() {
-		MyFXMLLoader<DownloadPaneController> downloadLoader = new MyFXMLLoader<>();
-		NodeAndController<DownloadPaneController> downloadNAC = downloadLoader.create("DownloadPane.fxml");
+		MyFXMLLoader<DownloadPaneController> loader = new MyFXMLLoader<>();
+		NodeAndController<DownloadPaneController> nac = loader.create(DOWNLOAD_PANE_FXML);
+		DownloadPaneController controller = nac.getController();
+
+
+		controller.setDownladButtonAction(downloadSingleCertificate(controller));
+		controller.setDownladUnitButtonAction(downloadWholeUnit(controller));
+		controller.setUrlValidator(url -> url.startsWith(urlPrefix));
 		
-		downloadNAC.getController().setDownladButtonAction(url -> {
-			downloadNAC.getController().blockControls();
+		pane = (Pane)nac.getNode();
+		
+		return this;
+	}
+
+	private Consumer<String> downloadWholeUnit(DownloadPaneController controller) {
+		return url -> {
+			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+			List<String> certificateURLs;
+			
+			parser.parse();
+			certificateURLs = parser.getAllScansInCatallog();
+			
+//			System.out.println("Certificates: " + certificateURLs.size());
+//			certificateURLs.forEach(c -> System.out.println(":: " + c));
+			
+			
+			//----
+			CertificateUnitDownloader downloader;
+			String destitationDir = controller.getDestitationDir();
+			String referenceCode = parser.getReferenceCode();
+			String dir = destitationDir + referenceCode.replace("/", "-").replace(".", "_");
+			
+			downloader = new CertificateUnitDownloader(dir, certificateURLs);
+			downloader.download(b -> controller.unblockControls());
+			
+		};
+	}
+
+	private Consumer<String> downloadSingleCertificate(DownloadPaneController controller) {
+		return url -> {
+			controller.blockControls();
 
 			CertificateDownloader downloader;
 			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
-			String destitationDir = downloadNAC.getController().getDestitationDir();
+			String destitationDir = controller.getDestitationDir();
 			SourceWriter sourceWriter = new SourceWriter(destitationDir + "source.txt", parser);
-			String certificateName = downloadNAC.getController().getCertificateName();
+			String certificateName = controller.getCertificateName();
 			
 			parser.parse();
 			downloader = new CertificateDownloader(destitationDir,parser.getCertificateURL());
 			downloader.setFileName(certificateName);
-			downloader.download(b -> downloadNAC.getController().unblockControls());
+			downloader.download(b -> controller.unblockControls());
 
 			sourceWriter.setUrl(url);
 			sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
 			
 			sourceWriter.write();
-		});
-
-		downloadNAC.getController().setDownladUnitButtonAction(url -> {
-			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
-			parser.parse();
-			List<String> certificates = parser.getAllScansInCatallog();
-			
-			System.out.println("Certificates: " + certificates.size());
-			certificates.forEach(c -> System.out.println(":: " + c));
-			
-			
-			//----
-			CertificateUnitDownloader downloader;
-			String destitationDir = downloadNAC.getController().getDestitationDir();
-			String referenceCode = parser.getReferenceCode().replace("/", "-").replace(".", "_");
-			
-			downloader = new CertificateUnitDownloader(destitationDir + referenceCode, certificates);
-//			downloader.setFileName(certificateName);
-			downloader.download(b -> downloadNAC.getController().unblockControls());
-			
-			
-		});
-		
-		downloadNAC.getController().setUrlValidator(url -> url.startsWith("https://szukajwarchiwach.pl/"));
-		
-		pane = (Pane)downloadNAC.getNode();
-		
-		return this;
+		};
 	}
 }
