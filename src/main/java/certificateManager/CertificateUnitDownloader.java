@@ -1,10 +1,6 @@
 package certificateManager;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,20 +26,28 @@ public class CertificateUnitDownloader {
 	private String downloadFileName = "";
 	
 	private Downloader downloader = new Downloader();
-
+	private boolean downloadOngoing = false;
+	
 	public String getLastDownloadFileName() {
 		return downloadFileName;
 	}
 	
-	public void download() {
-		download(null);
+	public boolean download() {
+		return download(null);
 	}
 
-	public void download(Consumer<List<Boolean>> after) {
-		new Thread(() -> downloadProcess(after)).start();
+	public boolean download(Consumer<List<Boolean>> after) {
+		if (downloadOngoing) return false;
+		downloadOngoing = true;
+
+		Thread t = new Thread(() -> downloadProcess(after));
+		t.setDaemon(true);
+		t.start();
+		return true;
 	}
 
 	private void downloadProcess(Consumer<List<Boolean>> after) {
+		
 		List<Boolean> success = new ArrayList<>();
 		downloader.setDir(DIR);
 
@@ -57,6 +61,8 @@ public class CertificateUnitDownloader {
 
 		if (after != null)
 			after.accept(success);
+		
+		downloadOngoing = false;
 	}
 	
 	private String createFileName(int i) {

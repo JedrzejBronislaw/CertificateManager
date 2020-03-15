@@ -125,6 +125,7 @@ public class DownloadPaneController implements Initializable {
 		Platform.runLater(() -> {
 			urlField.setDisable(controlsBlock);
 			downloadButton.setDisable(blankURL || !correctURL || controlsBlock);
+			downloadUnitButton.setDisable(blankURL || !correctURL || controlsBlock);
 			
 			//naming
 			cType_birth.setDisable(controlsBlock);

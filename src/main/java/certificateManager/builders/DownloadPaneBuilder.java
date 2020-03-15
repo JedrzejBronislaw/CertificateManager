@@ -40,14 +40,13 @@ public class DownloadPaneBuilder {
 
 	private Consumer<String> downloadWholeUnit(DownloadPaneController controller) {
 		return url -> {
+			controller.blockControls();
+
 			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
 			List<String> certificateURLs;
 			
 			parser.parse();
 			certificateURLs = parser.getAllScansInCatallog();
-			
-//			System.out.println("Certificates: " + certificateURLs.size());
-//			certificateURLs.forEach(c -> System.out.println(":: " + c));
 			
 			
 			//----
