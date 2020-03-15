@@ -23,8 +23,8 @@ public class WebParserSzukajwarchiwach implements WebParser {
 	}
 
 	private final static String domain = "https://szukajwarchiwach.pl/";
-	private final static String nextLink = " Nastêpny > >";
-	private final static String prevLink = " < < Poprzedni";
+	private final static String nextLink = "Nastêpny > >";
+	private final static String prevLink = "< < Poprzedni";
 
 	private final String url;
 
