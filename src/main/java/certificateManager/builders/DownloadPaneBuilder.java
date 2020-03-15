@@ -41,22 +41,26 @@ public class DownloadPaneBuilder {
 	private Consumer<String> downloadWholeUnit(DownloadPaneController controller) {
 		return url -> {
 			controller.blockControls();
+			
+			Thread t = new Thread(() -> {
+				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+				List<String> certificateURLs;
+				parser.parse();
+				certificateURLs = parser.getAllScansInCatallog();
 
-			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
-			List<String> certificateURLs;
 			
-			parser.parse();
-			certificateURLs = parser.getAllScansInCatallog();
+				//----
+				CertificateUnitDownloader downloader;
+				String destitationDir = controller.getDestitationDir();
+				String referenceCode = parser.getReferenceCode();
+				String dir = destitationDir + referenceCode.replace("/", "-").replace(".", "_");
+				
+				downloader = new CertificateUnitDownloader(dir, certificateURLs);
+				downloader.download(b -> controller.unblockControls());
+			});
 			
-			
-			//----
-			CertificateUnitDownloader downloader;
-			String destitationDir = controller.getDestitationDir();
-			String referenceCode = parser.getReferenceCode();
-			String dir = destitationDir + referenceCode.replace("/", "-").replace(".", "_");
-			
-			downloader = new CertificateUnitDownloader(dir, certificateURLs);
-			downloader.download(b -> controller.unblockControls());
+			t.setDaemon(true);
+			t.start();
 			
 		};
 	}
@@ -65,21 +69,27 @@ public class DownloadPaneBuilder {
 		return url -> {
 			controller.blockControls();
 
-			CertificateDownloader downloader;
-			WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
-			String destitationDir = controller.getDestitationDir();
-			SourceWriter sourceWriter = new SourceWriter(destitationDir + "source.txt", parser);
-			String certificateName = controller.getCertificateName();
-			
-			parser.parse();
-			downloader = new CertificateDownloader(destitationDir,parser.getCertificateURL());
-			downloader.setFileName(certificateName);
-			downloader.download(b -> controller.unblockControls());
+			Thread t = new Thread(() -> {
+				CertificateDownloader downloader;
+				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
+				String destitationDir = controller.getDestitationDir();
+				SourceWriter sourceWriter = new SourceWriter(destitationDir + "source.txt", parser);
+				String certificateName = controller.getCertificateName();
+				
+				parser.parse();
+				downloader = new CertificateDownloader(destitationDir,parser.getCertificateURL());
+				downloader.setFileName(certificateName);
+				downloader.download(b -> controller.unblockControls());
+	
+				sourceWriter.setUrl(url);
+				sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
+				
+				sourceWriter.write();
+			});
 
-			sourceWriter.setUrl(url);
-			sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
+			t.setDaemon(true);
+			t.start();
 			
-			sourceWriter.write();
 		};
 	}
 }
