@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -89,6 +90,7 @@
          </VBox.margin>
       </Button>
       <Button fx:id="downloadUnitButton" mnemonicParsing="false" text="%download_unit" />
+      <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" />
    </children>
    <padding>
       <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />

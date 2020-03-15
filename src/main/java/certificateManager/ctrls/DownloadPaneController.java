@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -56,6 +57,9 @@ public class DownloadPaneController implements Initializable {
 	//unit
 	@FXML
 	private Button downloadUnitButton;
+	
+	@FXML
+	private ProgressBar progressBar;
 	//unit END
 	
 	@FXML
@@ -90,6 +94,13 @@ public class DownloadPaneController implements Initializable {
 		return dirField.getText();
 	}
 	//dir END
+	
+	public void setUnitDownloadProgress(float percentage) {
+		Platform.runLater(() -> {
+			float p = (percentage == 100) ? 0 : percentage/100;
+			progressBar.setProgress(p);
+		});
+	}
 	
 	private void setUrlFieldColor(String color) {
 		CornerRadii radii = new CornerRadii(3);

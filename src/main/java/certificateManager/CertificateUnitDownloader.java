@@ -25,6 +25,9 @@ public class CertificateUnitDownloader {
 	private String fileName;
 	private String downloadFileName = "";
 	
+	@Setter
+	private Consumer<Float> progressEvent;
+	
 	private Downloader downloader = new Downloader();
 	private boolean downloadOngoing = false;
 	
@@ -51,20 +54,29 @@ public class CertificateUnitDownloader {
 		List<Boolean> success = new ArrayList<>();
 		downloader.setDir(DIR);
 
+		progress(0);
+		
 		if (SSLValidation.turnOff()) {
 			createDirIfNotExists();
 			for(int i=0; i<URLs.size(); i++) {
 				success.add(download(i));
-				
+				progress((float)(i+1)/URLs.size()*100);
 			}
 		}
 
+		progress(100);
+		
 		if (after != null)
 			after.accept(success);
 		
 		downloadOngoing = false;
 	}
 	
+	private void progress(float percentage) {
+		if (progressEvent != null)
+			progressEvent.accept(percentage);
+	}
+
 	private String createFileName(int i) {
 		return i + ".jpg";
 	}

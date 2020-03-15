@@ -43,6 +43,7 @@ public class DownloadPaneBuilder {
 			controller.blockControls();
 			
 			Thread t = new Thread(() -> {
+				controller.setUnitDownloadProgress(-1);
 				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
 				List<String> certificateURLs;
 				parser.parse();
@@ -56,6 +57,7 @@ public class DownloadPaneBuilder {
 				String dir = destitationDir + referenceCode.replace("/", "-").replace(".", "_");
 				
 				downloader = new CertificateUnitDownloader(dir, certificateURLs);
+				downloader.setProgressEvent(controller::setUnitDownloadProgress);
 				downloader.download(b -> controller.unblockControls());
 			});
 			
