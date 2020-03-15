@@ -12,7 +12,7 @@ public class CertificateNamer {
 	private String marriage;
 	private String death;
 	
-	private CertificateRecord record;
+	private CertificateRecord record = new CertificateRecord("");
 	@Setter
 	private CertificateType type = CertificateType.Other;
 	
