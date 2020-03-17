@@ -3,11 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -30,51 +26,6 @@
       </VBox>
       <VBox spacing="5.0">
          <children>
-            <Label text="%certificate_name" />
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <Label minWidth="-Infinity" prefWidth="70.0" text="%record">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <TextArea fx:id="recordField" maxHeight="-Infinity" prefHeight="25.0" prefWidth="464.0" />
-               </children>
-            </HBox>
-            <VBox alignment="TOP_CENTER" fillWidth="false">
-               <children>
-                  <Label text="%certificate_type" />
-                  <VBox fillWidth="false">
-                     <children>
-                        <RadioButton fx:id="cType_birth" mnemonicParsing="false" text="%birth">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="certificateType" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton fx:id="cType_marriage" mnemonicParsing="false" text="%marriage" toggleGroup="$certificateType" />
-                        <RadioButton fx:id="cType_death" mnemonicParsing="false" text="%death" toggleGroup="$certificateType" />
-                        <RadioButton fx:id="cType_other" mnemonicParsing="false" text="%other" toggleGroup="$certificateType" />
-                     </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </VBox>
-               </children>
-            </VBox>
-            <HBox alignment="CENTER_LEFT" minWidth="-Infinity">
-               <children>
-                  <Label prefWidth="70.0" text="%name">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="nameField" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox spacing="5.0">
-         <children>
             <Label text="%directory" />
             <TextField fx:id="dirField" editable="false" text="D:\certificate\" />
             <HBox alignment="TOP_RIGHT">
@@ -84,13 +35,6 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="downloadButton" mnemonicParsing="false" text="%download">
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </Button>
-      <Button fx:id="downloadUnitButton" mnemonicParsing="false" text="%download_unit" />
-      <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" />
    </children>
    <padding>
       <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
