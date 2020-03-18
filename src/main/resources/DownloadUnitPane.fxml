@@ -4,7 +4,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="certificateManager.ctrls.DownloadPaneController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="certificateManager.ctrls.DownloadUnitPaneController">
    <children>
       <Button fx:id="downloadUnitButton" mnemonicParsing="false" text="%download_unit" />
       <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" />

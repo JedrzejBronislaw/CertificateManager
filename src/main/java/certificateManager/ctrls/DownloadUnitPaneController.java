@@ -1,39 +1,19 @@
 package certificateManager.ctrls;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-import certificateManager.CertificateNamer;
-import certificateManager.CertificateNamer.CertificateType;
-import certificateManager.lang.Internationalization;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
-import javafx.stage.DirectoryChooser;
 import lombok.Setter;
 
-public class DownloadPaneController implements Initializable {
+public class DownloadUnitPaneController implements Initializable {
 
-	@FXML
-	private VBox mainBox;
 	
-	//naming
+//	//naming
 //	@FXML
 //	private RadioButton cType_birth;
 //	@FXML
@@ -52,23 +32,23 @@ public class DownloadPaneController implements Initializable {
 	//naming END
 	
 	//dir
-	@FXML
-	private TextField dirField;
-	@FXML
-	private Button selectDirButton;
+//	@FXML
+//	private TextField dirField;
+//	@FXML
+//	private Button selectDirButton;
 	//dir END
 	
 	//unit
-//	@FXML
-//	private Button downloadUnitButton;
-//	
-//	@FXML
-//	private ProgressBar progressBar;
-	//unit END
+	@FXML
+	private Button downloadUnitButton;
 	
 	@FXML
-	private TextField urlField;
-
+	private ProgressBar progressBar;
+	//unit END
+	
+//	@FXML
+//	private TextField urlField;
+//
 //	@FXML
 //	private Button downloadButton;
 
@@ -76,19 +56,19 @@ public class DownloadPaneController implements Initializable {
 //	private Consumer<String> downladButtonAction;
 
 	//unit
-//	@Setter
-//	private Consumer<String> downladUnitButtonAction;	
+	@Setter
+	private Runnable downladUnitButtonAction;	
 	//unit END
 	
-	@Setter
-	private Function<String, Boolean> urlValidator;
+//	@Setter
+//	private Supplier<String> CertificateURL;
+	
+//	@Setter
+//	private Function<String, Boolean> urlValidator;
 
 	private boolean correctURL = true;
 	private boolean controlsBlock = false;
 
-	public void addPane(Pane newPane) {
-		mainBox.getChildren().add(newPane);
-	}
 
 	//naming
 //	public String getCertificateName() {
@@ -97,26 +77,26 @@ public class DownloadPaneController implements Initializable {
 	//naming END
 	
 	//dir
-	public String getDestitationDir() {
-		return dirField.getText();
-	}
+//	public String getDestitationDir() {
+//		return dirField.getText();
+//	}
 	//dir END
 	
-//	public void setUnitDownloadProgress(float percentage) {
-//		Platform.runLater(() -> {
-//			float p = (percentage == 100) ? 0 : percentage/100;
-//			progressBar.setProgress(p);
-//		});
-//	}
-	
-	private void setUrlFieldColor(String color) {
-		CornerRadii radii = new CornerRadii(3);
-		Insets insets = new Insets(1);
-
-		BackgroundFill backgroundFill = new BackgroundFill(Paint.valueOf(color), radii, insets);
-
-		Platform.runLater(() -> urlField.setBackground(new Background(backgroundFill)));
+	public void setUnitDownloadProgress(float percentage) {
+		Platform.runLater(() -> {
+			float p = (percentage == 100) ? 0 : percentage/100;
+			progressBar.setProgress(p);
+		});
 	}
+	
+//	private void setUrlFieldColor(String color) {
+//		CornerRadii radii = new CornerRadii(3);
+//		Insets insets = new Insets(1);
+//
+//		BackgroundFill backgroundFill = new BackgroundFill(Paint.valueOf(color), radii, insets);
+//
+//		Platform.runLater(() -> urlField.setBackground(new Background(backgroundFill)));
+//	}
 
 	public void blockControls(boolean block) {
 		controlsBlock = block;
@@ -133,15 +113,15 @@ public class DownloadPaneController implements Initializable {
 
 	private void refreshControls() {
 
-		boolean blankURL = urlField.getText().isBlank();
+//		boolean blankURL = urlField.getText().isBlank();
 
-		if (blankURL || correctURL)
-			setUrlFieldColor("FFFFFF");
-		else
-			setUrlFieldColor("FFA0A0");
+//		if (blankURL || correctURL)
+//			setUrlFieldColor("FFFFFF");
+//		else
+//			setUrlFieldColor("FFA0A0");
 
 		Platform.runLater(() -> {
-			urlField.setDisable(controlsBlock);
+//			urlField.setDisable(controlsBlock);
 //			downloadButton.setDisable(blankURL || !correctURL || controlsBlock);
 //			downloadUnitButton.setDisable(blankURL || !correctURL || controlsBlock);
 			
@@ -156,8 +136,8 @@ public class DownloadPaneController implements Initializable {
 			//naming END
 			
 			//dir
-			dirField.setDisable(controlsBlock);
-			selectDirButton.setDisable(controlsBlock);
+//			dirField.setDisable(controlsBlock);
+//			selectDirButton.setDisable(controlsBlock);
 			//dir END
 		});
 	}
@@ -171,18 +151,18 @@ public class DownloadPaneController implements Initializable {
 //		});
 		
 		//unit
-//		downloadUnitButton.setOnAction(url -> {
-//			if (downladUnitButtonAction != null)
-//				downladUnitButtonAction.accept(urlField.getText());
-//		});
+		downloadUnitButton.setOnAction(url -> {
+			if (downladUnitButtonAction != null)
+				downladUnitButtonAction.run();
+		});
 		//unit END
 
-		urlField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (urlValidator != null)
-				correctURL = urlValidator.apply(newValue);
-
-			refreshControls();
-		});
+//		urlField.textProperty().addListener((observable, oldValue, newValue) -> {
+//			if (urlValidator != null)
+//				correctURL = urlValidator.apply(newValue);
+//
+//			refreshControls();
+//		});
 
 		refreshControls();
 		
@@ -204,21 +184,21 @@ public class DownloadPaneController implements Initializable {
 		//naming END
 		
 		//dir
-		selectDirButton.setOnAction(e -> {
-			DirectoryChooser chooser = new DirectoryChooser();
-			File dir;
-			
-			chooser.setTitle("Select directory...");
-			dir = chooser.showDialog(null);
-			
-			if(dir != null && dir.exists() && dir.isDirectory())
-				dirField.setText(dir.getAbsolutePath() + File.separator);
-			
-		});
+//		selectDirButton.setOnAction(e -> {
+//			DirectoryChooser chooser = new DirectoryChooser();
+//			File dir;
+//			
+//			chooser.setTitle("Select directory...");
+//			dir = chooser.showDialog(null);
+//			
+//			if(dir != null && dir.exists() && dir.isDirectory())
+//				dirField.setText(dir.getAbsolutePath() + File.separator);
+//			
+//		});
 		//dir END
 	}
 
-	//naming
+//	//naming
 //	private void refreshCertificateType() {
 //		if(cType_birth.isSelected())
 //			namer.setType(CertificateType.Birth);
