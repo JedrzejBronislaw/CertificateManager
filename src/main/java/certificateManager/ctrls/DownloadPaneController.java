@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -28,6 +30,8 @@ public class DownloadPaneController implements Initializable {
 	private static final String CORRECT_URL_COLOR = "FFFFFF";
 	@FXML
 	private VBox mainBox;
+	@FXML
+	private TabPane downloadPane;
 	@FXML
 	private TextField urlField;
 	@FXML
@@ -48,6 +52,13 @@ public class DownloadPaneController implements Initializable {
 	
 	public void addPane(Pane newPane) {
 		mainBox.getChildren().add(newPane);
+	}
+	
+	public void addDownloadOptionPane(String name, Pane pane) {
+		Tab tab = new Tab(name, pane);
+		tab.closableProperty().set(false);
+
+		downloadPane.getTabs().add(tab);
 	}
 
 	public String getURL() {

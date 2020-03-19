@@ -1,6 +1,7 @@
 package certificateManager.builders;
 
 import certificateManager.ctrls.DownloadPaneController;
+import certificateManager.lang.Internationalization;
 import certificateManager.tools.MyFXMLLoader;
 import certificateManager.tools.MyFXMLLoader.NodeAndController;
 import javafx.scene.layout.Pane;
@@ -56,8 +57,8 @@ public class DownloadPaneBuilder {
 		Pane downloadCertificatePane = downloadCertificatePaneBuilder.build().get();
 		Pane downloadUnitPane = downloadUnitPaneBuilder.build().get();
 
-		controller.addPane(downloadCertificatePane);
-		controller.addPane(downloadUnitPane);
+		controller.addDownloadOptionPane(Internationalization.get("certificate"), downloadCertificatePane);
+		controller.addDownloadOptionPane(Internationalization.get("unit"), downloadUnitPane);
 		
 		return this;
 	}
