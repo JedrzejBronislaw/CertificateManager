@@ -17,9 +17,7 @@ import javafx.scene.control.TextField;
 import lombok.Setter;
 
 public class DownloadCertificatePaneController implements Initializable {
-
 	
-	//naming
 	@FXML
 	private RadioButton cType_birth;
 	@FXML
@@ -34,77 +32,30 @@ public class DownloadCertificatePaneController implements Initializable {
 	@FXML
 	private TextField nameField;
 
-	private CertificateNamer namer = new CertificateNamer();
-	//naming END
-	
-	//dir
-//	@FXML
-//	private TextField dirField;
-//	@FXML
-//	private Button selectDirButton;
-	//dir END
-	
-	//unit
-//	@FXML
-//	private Button downloadUnitButton;
-//	
-//	@FXML
-//	private ProgressBar progressBar;
-	//unit END
-	
-//	@FXML
-//	private TextField urlField;
-
 	@FXML
 	private Button downloadButton;
 
+	
 	@Setter
 	private Runnable downladButtonAction;
 
-
-//	@Setter
-//	private Supplier<String> CertificateURL;
 	
-	//unit
-//	@Setter
-//	private Consumer<String> downladUnitButtonAction;	
-	//unit END
-	
-//	@Setter
-//	private Function<String, Boolean> urlValidator;
+	private CertificateNamer namer = new CertificateNamer();
 
-	private boolean correctURL = true;
+
 	private boolean controlsBlock = false;
+	private boolean possibilityOfDownloading = false;
+	
+	public void setPossibilityOfDownloading(boolean possibility) {
+		this.possibilityOfDownloading = possibility;
+		refreshControls();
+	}
 
-
-	//naming
 	public String getCertificateName() {
 		return nameField.getText().trim();
 	}
-	//naming END
-	
-	//dir
-//	public String getDestitationDir() {
-//		return dirField.getText();
-//	}
-	//dir END
-	
-//	public void setUnitDownloadProgress(float percentage) {
-//		Platform.runLater(() -> {
-//			float p = (percentage == 100) ? 0 : percentage/100;
-//			progressBar.setProgress(p);
-//		});
-//	}
-	
-//	private void setUrlFieldColor(String color) {
-//		CornerRadii radii = new CornerRadii(3);
-//		Insets insets = new Insets(1);
-//
-//		BackgroundFill backgroundFill = new BackgroundFill(Paint.valueOf(color), radii, insets);
-//
-//		Platform.runLater(() -> urlField.setBackground(new Background(backgroundFill)));
-//	}
 
+	
 	public void blockControls(boolean block) {
 		controlsBlock = block;
 		refreshControls();
@@ -120,19 +71,9 @@ public class DownloadCertificatePaneController implements Initializable {
 
 	private void refreshControls() {
 
-//		boolean blankURL = urlField.getText().isBlank();
-
-//		if (blankURL || correctURL)
-//			setUrlFieldColor("FFFFFF");
-//		else
-//			setUrlFieldColor("FFA0A0");
-
 		Platform.runLater(() -> {
-//			urlField.setDisable(controlsBlock);
-//			downloadButton.setDisable(blankURL || !correctURL || controlsBlock);
-//			downloadUnitButton.setDisable(blankURL || !correctURL || controlsBlock);
+			downloadButton.setDisable(!possibilityOfDownloading|| controlsBlock);
 			
-			//naming
 			cType_birth.setDisable(controlsBlock);
 			cType_marriage.setDisable(controlsBlock);
 			cType_death.setDisable(controlsBlock);
@@ -140,12 +81,6 @@ public class DownloadCertificatePaneController implements Initializable {
 
 			recordField.setDisable(controlsBlock);
 			nameField.setDisable(controlsBlock);
-			//naming END
-			
-			//dir
-//			dirField.setDisable(controlsBlock);
-//			selectDirButton.setDisable(controlsBlock);
-			//dir END
 		});
 	}
 
@@ -157,55 +92,23 @@ public class DownloadCertificatePaneController implements Initializable {
 				downladButtonAction.run();
 		});
 		
-		//unit
-//		downloadUnitButton.setOnAction(url -> {
-//			if (downladUnitButtonAction != null)
-//				downladUnitButtonAction.accept(urlField.getText());
-//		});
-		//unit END
+		recordField.textProperty().addListener((obrv, oldV, newV) -> refreshCertificateName());
 
-//		urlField.textProperty().addListener((observable, oldValue, newValue) -> {
-//			if (urlValidator != null)
-//				correctURL = urlValidator.apply(newValue);
-//
-//			refreshControls();
-//		});
-
-		refreshControls();
-		
-
-		//naming
 		namer.setCertificateTypeNames(
 				Internationalization.get("birth").toLowerCase(),
 				Internationalization.get("marriage").toLowerCase(),
 				Internationalization.get("death").toLowerCase());
-		
-		
-		recordField.textProperty().addListener((obrv, oldV, newV) -> refreshCertificateName());
 		
 		ChangeListener<? super Boolean> typeRefersher = (obrv, oldV, newV) -> refreshCertificateType();
 		cType_birth.selectedProperty().addListener(typeRefersher);
 		cType_marriage.selectedProperty().addListener(typeRefersher);
 		cType_death.selectedProperty().addListener(typeRefersher);
 		cType_other.selectedProperty().addListener(typeRefersher);
-		//naming END
 		
-		//dir
-//		selectDirButton.setOnAction(e -> {
-//			DirectoryChooser chooser = new DirectoryChooser();
-//			File dir;
-//			
-//			chooser.setTitle("Select directory...");
-//			dir = chooser.showDialog(null);
-//			
-//			if(dir != null && dir.exists() && dir.isDirectory())
-//				dirField.setText(dir.getAbsolutePath() + File.separator);
-//			
-//		});
-		//dir END
+
+		refreshControls();
 	}
 
-	//naming
 	private void refreshCertificateType() {
 		if(cType_birth.isSelected())
 			namer.setType(CertificateType.Birth);
@@ -223,5 +126,4 @@ public class DownloadCertificatePaneController implements Initializable {
 		namer.setRecord(recordField.getText());
 		nameField.setText(namer.generateName());
 	}
-	//naming END
 }

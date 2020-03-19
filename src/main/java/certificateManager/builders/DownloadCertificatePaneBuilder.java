@@ -1,84 +1,59 @@
 package certificateManager.builders;
 
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import certificateManager.CertificateDownloader;
-import certificateManager.CertificateUnitDownloader;
 import certificateManager.SourceWriter;
 import certificateManager.WebParserSzukajwarchiwach;
 import certificateManager.ctrls.DownloadCertificatePaneController;
-import certificateManager.ctrls.DownloadPaneController;
 import certificateManager.tools.MyFXMLLoader;
 import certificateManager.tools.MyFXMLLoader.NodeAndController;
 import javafx.scene.layout.Pane;
+import lombok.Getter;
 import lombok.Setter;
 
 public class DownloadCertificatePaneBuilder {
 
-//	private static final String urlPrefix = "https://szukajwarchiwach.pl/";
 	private static final String DOWNLOAD_CERTIFICATE_PANE_FXML = "DownloadCertificatePane.fxml";
 	private Pane pane;
-
+	@Getter
+	private DownloadCertificatePaneController controller;
+	
 	@Setter
 	private Supplier<String> certificateURL;
 	@Setter
-	private Supplier<String> destitationDir;;
-	
+	private Supplier<String> destitationDir;
+
+	@Setter
+	private Runnable startDownload;
+	@Setter
+	private Runnable finishDownload;
 
 	public Pane get() {
 		return pane;
 	}
 	
+	
 	public DownloadCertificatePaneBuilder build() {
 		MyFXMLLoader<DownloadCertificatePaneController> loader = new MyFXMLLoader<>();
 		NodeAndController<DownloadCertificatePaneController> nac = loader.create(DOWNLOAD_CERTIFICATE_PANE_FXML);
-		DownloadCertificatePaneController controller = nac.getController();
-
+		
+		controller = nac.getController();
+		pane = (Pane)nac.getNode();
 
 		controller.setDownladButtonAction(downloadSingleCertificate(controller));
-//		controller.setDownladUnitButtonAction(downloadWholeUnit(controller));
-//		controller.setUrlValidator(url -> url.startsWith(urlPrefix));
 		
-		pane = (Pane)nac.getNode();
 		
 		return this;
 	}
-
-//	private Consumer<String> downloadWholeUnit(DownloadPaneController controller) {
-//		return url -> {
-//			controller.blockControls();
-//			
-//			Thread t = new Thread(() -> {
-//				controller.setUnitDownloadProgress(-1);
-//				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
-//				List<String> certificateURLs;
-//				parser.parse();
-//				certificateURLs = parser.getAllScansInCatallog();
-//
-//			
-//				//----
-//				CertificateUnitDownloader downloader;
-//				String destitationDir = controller.getDestitationDir();
-//				String referenceCode = parser.getReferenceCode();
-//				String dir = destitationDir + referenceCode.replace("/", "-").replace(".", "_");
-//				
-//				downloader = new CertificateUnitDownloader(dir, certificateURLs);
-//				downloader.setProgressEvent(controller::setUnitDownloadProgress);
-//				downloader.download(b -> controller.unblockControls());
-//			});
-//			
-//			t.setDaemon(true);
-//			t.start();
-//			
-//		};
-//	}
 
 	private Runnable downloadSingleCertificate(DownloadCertificatePaneController controller) {
 		return () -> {
 			String url;
 			String destDir;
+			
+			if (startDownload != null)
+				startDownload.run();
 			
 			controller.blockControls();
 
@@ -93,14 +68,20 @@ public class DownloadCertificatePaneBuilder {
 			Thread t = new Thread(() -> {
 				CertificateDownloader downloader;
 				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
-				String destitationDir = destDir;//controller.getDestitationDir();
+				String destitationDir = destDir;
 				SourceWriter sourceWriter = new SourceWriter(destitationDir + "source.txt", parser);
 				String certificateName = controller.getCertificateName();
 				
 				parser.parse();
 				downloader = new CertificateDownloader(destitationDir,parser.getCertificateURL());
 				downloader.setFileName(certificateName);
-				downloader.download(b -> controller.unblockControls());
+				downloader.download(b -> {
+					
+					if (finishDownload != null)
+						finishDownload.run();
+					
+					controller.unblockControls();
+					});
 	
 				sourceWriter.setUrl(url);
 				sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
