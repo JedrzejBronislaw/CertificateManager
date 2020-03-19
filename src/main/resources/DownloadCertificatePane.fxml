@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="certificateManager.ctrls.DownloadCertificatePaneController">
+<VBox alignment="TOP_CENTER" spacing="5.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="certificateManager.ctrls.DownloadCertificatePaneController">
    <children>
       <VBox spacing="5.0">
          <children>
@@ -22,7 +22,7 @@
                         <Insets left="10.0" />
                      </padding>
                   </Label>
-                  <TextArea fx:id="recordField" maxHeight="-Infinity" prefHeight="25.0" prefWidth="464.0" />
+                  <TextArea fx:id="recordField" maxHeight="-Infinity" prefHeight="25.0" />
                </children>
             </HBox>
             <VBox alignment="TOP_CENTER" fillWidth="false">
