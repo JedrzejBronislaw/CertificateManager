@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import certificateManager.lang.Internationalization;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -118,7 +119,7 @@ public class DownloadPaneController implements Initializable {
 			DirectoryChooser chooser = new DirectoryChooser();
 			File dir;
 			
-			chooser.setTitle("Select directory...");
+			chooser.setTitle(Internationalization.get("select_dierctory"));
 			dir = chooser.showDialog(null);
 			
 			if(dir != null && dir.exists() && dir.isDirectory())
