@@ -14,6 +14,7 @@ import lombok.Setter;
 
 public class DownloadCertificatePaneBuilder {
 
+	private static final String SourceFileName = "source.txt";
 	private static final String DOWNLOAD_CERTIFICATE_PANE_FXML = "DownloadCertificatePane.fxml";
 	private Pane pane;
 	@Getter
@@ -48,20 +49,19 @@ public class DownloadCertificatePaneBuilder {
 	}
 
 	private Runnable downloadSingleCertificate(DownloadCertificatePaneController controller) {
+		DownloadCertificatePaneBuilder builder = this;
+		
 		return () -> {
 			String url;
 			String destDir;
 			
-			if (startDownload != null)
-				startDownload.run();
-			
-			controller.blockControls();
+			beforeDownload();
 
 			if(certificateURL != null && destitationDir != null) {
 				url = certificateURL.get();
 				destDir = destitationDir.get();
 			} else {
-				controller.unblockControls();
+				builder.afterDownload(false);
 				return;
 			}
 
@@ -69,19 +69,13 @@ public class DownloadCertificatePaneBuilder {
 				CertificateDownloader downloader;
 				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
 				String destitationDir = destDir;
-				SourceWriter sourceWriter = new SourceWriter(destitationDir + "source.txt", parser);
+				SourceWriter sourceWriter = new SourceWriter(destitationDir + SourceFileName, parser);
 				String certificateName = controller.getCertificateName();
 				
 				parser.parse();
 				downloader = new CertificateDownloader(destitationDir,parser.getCertificateURL());
 				downloader.setFileName(certificateName);
-				downloader.download(b -> {
-					
-					if (finishDownload != null)
-						finishDownload.run();
-					
-					controller.unblockControls();
-					});
+				downloader.download(builder::afterDownload);
 	
 				sourceWriter.setUrl(url);
 				sourceWriter.setCertificateName(downloader.getLastDownloadFileName());
@@ -93,5 +87,18 @@ public class DownloadCertificatePaneBuilder {
 			t.start();
 			
 		};
+	}
+
+	void beforeDownload() {
+		if (startDownload != null)
+			startDownload.run();
+		
+		controller.blockControls();
+	}
+	void afterDownload(boolean successes) {
+		if (finishDownload != null)
+			finishDownload.run();
+		
+		controller.unblockControls();
 	}
 }

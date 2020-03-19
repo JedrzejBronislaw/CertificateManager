@@ -47,27 +47,25 @@ public class DownloadUnitPaneBuilder {
 	}
 
 	private Runnable downloadWholeUnit(DownloadUnitPaneController controller) {
-		
+		DownloadUnitPaneBuilder builder = this;
 		
 		return () -> {
 			String url;
 			String destDir;
 			
-			if (startDownload != null)
-				startDownload.run();
-			
-			controller.blockControls();
+			beforeDownload();
 
 			if(certificateURL != null && destitationDir != null) {
 				url = certificateURL.get();
 				destDir = destitationDir.get();
 			} else {
-				controller.unblockControls();
+				builder.afterDownload(null);
 				return;
 			}
 				
 			Thread t = new Thread(() -> {
 				controller.setUnitDownloadProgress(-1);
+
 				WebParserSzukajwarchiwach parser = new WebParserSzukajwarchiwach(url);
 				List<String> certificateURLs;
 				parser.parse();
@@ -82,18 +80,25 @@ public class DownloadUnitPaneBuilder {
 				
 				downloader = new CertificateUnitDownloader(dir, certificateURLs);
 				downloader.setProgressEvent(controller::setUnitDownloadProgress);
-				downloader.download(b -> {
-					
-					if (finishDownload != null)
-						finishDownload.run();
-					
-					controller.unblockControls();
-					});
+				downloader.download(builder::afterDownload);
 			});
 			
 			t.setDaemon(true);
 			t.start();
 			
 		};
+	}
+
+	void beforeDownload() {
+		if (startDownload != null)
+			startDownload.run();
+		
+		controller.blockControls();
+	}
+	void afterDownload(List<Boolean> successes) {
+		if (finishDownload != null)
+			finishDownload.run();
+		
+		controller.unblockControls();
 	}
 }

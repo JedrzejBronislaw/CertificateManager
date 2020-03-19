@@ -23,6 +23,8 @@ import lombok.Setter;
 
 public class DownloadPaneController implements Initializable {
 
+	private static final String INCORRECT_URL_COLOR = "FFA0A0";
+	private static final String CORRECT_URL_COLOR = "FFFFFF";
 	@FXML
 	private VBox mainBox;
 	@FXML
@@ -79,9 +81,9 @@ public class DownloadPaneController implements Initializable {
 		boolean blankURL = urlField.getText().isBlank();
 
 		if (blankURL || correctURL)
-			setUrlFieldColor("FFFFFF");
+			setUrlFieldColor(CORRECT_URL_COLOR);
 		else
-			setUrlFieldColor("FFA0A0");
+			setUrlFieldColor(INCORRECT_URL_COLOR);
 
 		Platform.runLater(() -> {
 			urlField.setDisable(controlsBlock);

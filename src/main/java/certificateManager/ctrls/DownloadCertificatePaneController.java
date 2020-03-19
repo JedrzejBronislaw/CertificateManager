@@ -92,7 +92,7 @@ public class DownloadCertificatePaneController implements Initializable {
 				downladButtonAction.run();
 		});
 		
-		recordField.textProperty().addListener((obrv, oldV, newV) -> refreshCertificateName());
+		recordField.textProperty().addListener((obrv, oldV, newV) -> refreshCertificateRecord());
 
 		namer.setCertificateTypeNames(
 				Internationalization.get("birth").toLowerCase(),
@@ -119,11 +119,17 @@ public class DownloadCertificatePaneController implements Initializable {
 		if(cType_other.isSelected())
 			namer.setType(CertificateType.Other);
 
+		refreshCertificateName();
+	}
+	
+	private void refreshCertificateRecord() {
+		namer.setRecord(recordField.getText());
+		refreshCertificateName();
+	}
+
+	private void refreshCertificateName() {
 		nameField.setText(namer.generateName());
 	}
 	
-	private void refreshCertificateName() {
-		namer.setRecord(recordField.getText());
-		nameField.setText(namer.generateName());
-	}
+	
 }
